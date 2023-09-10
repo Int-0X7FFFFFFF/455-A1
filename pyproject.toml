@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "assignment1"
+version = "0.1.0"
+description = ""
+authors = ["jiemin <jiemin@ualberta.ca>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.25.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
