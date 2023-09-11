@@ -286,9 +286,8 @@ class GtpConnection:
     Assignment 1 - game-specific commands you have to implement or modify
     ==========================================================================
     """
-    def check_point_is_win(self, point:GO_POINT):
+    def check_point_is_win(self, point:GO_POINT) -> GO_COLOR or bool:
         """Function to check is a point have 5 connected point"""
-        #TODO
         bord2D = GoBoardUtil.get_twoD_board(self.board)
         num_rows, num_cols = bord2D.shape
 
@@ -360,6 +359,13 @@ class GtpConnection:
             
         return False
     
+    def cap_process(self, point: GO_POINT) -> None:
+        # TODO
+        """
+        Function to process a point move and check is any cap in this move
+        """
+        return
+    
     def gogui_rules_final_result_cmd(self, args: List[str]) -> None:
         """ Implement this function for Assignment 1 """
         last_check = self.check_point_is_win(self.board.last_move)
@@ -403,10 +409,12 @@ class GtpConnection:
             if self.board.current_player != color:
                 self.respond(f'illegal move: {args} wrong color')
                 return
-            if not self.board.play_move(move, color):
-                self.respond("Illegal Move: {}".format(board_move))
-                return
+            # is legal move
+            if self.board.board[move] != EMPTY:
+                self.respond(f'illegal move: {args} occupied')
             else:
+                self.board.board[move] = color
+                self.cap_process(move)
                 self.debug_msg(
                     "Move: {}\nBoard:\n{}\n".format(board_move, self.board2d())
                 )
