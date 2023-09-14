@@ -387,6 +387,9 @@ class GtpConnection:
     def gogui_rules_legal_moves_cmd(self, args: List[str]) -> None:
         """ Implement this function for Assignment 1 """
         list_res = [format_point(x) for x in self.board.get_empty_points()]
+        ko = format_point(self.board.ko_recapture)
+        if ko in list_res:
+            list_res.remove(ko)
         res = " ".join(list_res)
         self.respond(res)
 
