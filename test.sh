@@ -1,0 +1,1 @@
+gogui-regress Go0.py ./assignment1-public-tests.gtp
