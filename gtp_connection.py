@@ -44,6 +44,7 @@ class GtpConnection:
         self._debug_mode: bool = debug_mode
         self.go_engine = go_engine
         self.board: GoBoard = board
+        self.game_status = "playing"
         self.commands: Dict[str, Callable[[List[str]], None]] = {
             "protocol_version": self.protocol_version_cmd,
             "quit": self.quit_cmd,
@@ -157,6 +158,7 @@ class GtpConnection:
         """
         Reset the board to empty board of given size
         """
+        self.game_status = "playing"
         self.board.reset(size)
 
     def board2d(self) -> str:
@@ -288,6 +290,7 @@ class GtpConnection:
     """
     def check_point_is_win(self, point:GO_POINT) -> GO_COLOR or bool:
         """Function to check is a point have 5 connected point"""
+        self.debug_msg(format_point(point_to_coord(point, self.board.size)))
         bord2D = GoBoardUtil.get_twoD_board(self.board)
         num_rows, num_cols = bord2D.shape
 
@@ -308,60 +311,83 @@ class GtpConnection:
                 return "ERROR"
 
         count = 1
+        UP = True
+        DOWN = True
         # Up and Down
         for i in range(1,6):
             up_coord = (current_coord[0], current_coord[1] + i)
-            if is_within_board(up_coord) and current_color == bord2D[up_coord]:
+            if is_within_board(up_coord) and current_color == bord2D[up_coord] and UP:
                 count += 1
+            else:
+                UP = False
 
             down_coord = (current_coord[0], current_coord[1] - i)
-            if is_within_board(down_coord) and current_color == bord2D[down_coord]:
+            if is_within_board(down_coord) and current_color == bord2D[down_coord] and DOWN:
                 count += 1
+            else:
+                DOWN = False
 
             if count >= 5:
                 return int_to_color(current_color)
 
         count = 1
         # L and R
+        L = True
+        R = True
         for i in range(1,6):
             right_coord = (current_coord[0] + i, current_coord[1])
             left_coord = (current_coord[0] - i, current_coord[1])
             
-            if is_within_board(right_coord) and current_color == bord2D[right_coord]:
+            if is_within_board(right_coord) and current_color == bord2D[right_coord] and R:
                 count += 1
+            else:
+                R = False
             
-            if is_within_board(left_coord) and current_color == bord2D[left_coord]:
+            if is_within_board(left_coord) and current_color == bord2D[left_coord] and L:
                 count += 1
+            else:
+                R = False
 
             if count >= 5:
                 return int_to_color(current_color)
         
         count = 1
         # Diag 1
+        L = True
+        R = True
         for i in range(1,6):
             right_coord = (current_coord[0] + i, current_coord[1] + i)
             left_coord = (current_coord[0] - i, current_coord[1] - i)
 
-            if is_within_board(right_coord) and current_color == bord2D[right_coord]:
+            if is_within_board(right_coord) and current_color == bord2D[right_coord] and R:
                 count += 1
+            else:
+                R = False
             
-            if is_within_board(left_coord) and current_color == bord2D[left_coord]:
+            if is_within_board(left_coord) and current_color == bord2D[left_coord] and L:
                 count += 1
-
+            else:
+                R = False
             if count >= 5:
                 return int_to_color(current_color)
             
         count = 1
+        L = True
+        R = True
         # Diag 2
         for i in range(1,6):
             right_coord = (current_coord[0] + i, current_coord[1] - i)
             left_coord = (current_coord[0] - i, current_coord[1] + i)
             
-            if is_within_board(right_coord) and current_color == bord2D[right_coord]:
+            if is_within_board(right_coord) and current_color == bord2D[right_coord] and R:
                 count += 1
+            else:
+                R = False
             
-            if is_within_board(left_coord) and current_color == bord2D[left_coord]:
+            if is_within_board(left_coord) and current_color == bord2D[left_coord] and L:
                 count += 1
+            else:
+                R = False
 
             if count >= 5:
                 return int_to_color(current_color)
@@ -453,16 +479,20 @@ class GtpConnection:
         if self.board.last_move != -1:
             last_check = self.check_point_is_win(self.board.last_move)
             if last_check != False:
+                self.game_status = last_check
                 self.respond(last_check)
                 return
         if self.board.black_cap >= 10:
+            self.game_status = "black"
             self.respond("black")
             return
         if self.board.white_cap >= 10:
+            self.game_status = "white"
             self.respond("white")
             return
         # is Draw?
         elif len(self.board.get_empty_points()) == 0:
+            self.game_status = "draw"
             self.respond("draw")
             return
         self.respond("unknown")
@@ -470,13 +500,16 @@ class GtpConnection:
 
     def gogui_rules_legal_moves_cmd(self, args: List[str]) -> None:
         """ Implement this function for Assignment 1 """
-        list_res = [format_point(point_to_coord(x, self.board.size)) for x in self.board.get_empty_points()]
-        if self.board.ko_recapture != -1:
-            ko = format_point(point_to_coord(self.board.ko_recapture, self.board.size))
-            if ko in list_res:
-                list_res.remove(ko)
-        res = " ".join(list_res)
-        self.respond(res)
+        if self.game_status == "playing":
+            list_res = [format_point(point_to_coord(x, self.board.size)) for x in self.board.get_empty_points()]
+            if self.board.ko_recapture != -1:
+                ko = format_point(point_to_coord(self.board.ko_recapture, self.board.size))
+                if ko in list_res:
+                    list_res.remove(ko)
+            res = " ".join(list_res)
+            self.respond(res)
+        else:
+            self.respond()
 
     def play_cmd(self, args: List[str]) -> None:
         """
