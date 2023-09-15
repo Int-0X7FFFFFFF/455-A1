@@ -30,7 +30,7 @@ from board_util import GoBoardUtil
 from engine import GoEngine
 
 class GtpConnection:
-    def __init__(self, go_engine: GoEngine, board: GoBoard, debug_mode: bool = False) -> None:
+    def __init__(self, go_engine: GoEngine, board: GoBoard, debug_mode: bool = True) -> None:
         """
         Manage a GTP connection for a Go-playing engine
 
@@ -299,9 +299,17 @@ class GtpConnection:
         current_coord = (((self.board.size -1) - (current_coord[0] - 1)), current_coord[1] - 1)
         current_color = bord2D[current_coord]
 
-        count = 0
+        def int_to_color(num):
+            if num == 1:
+                return "white"
+            elif num == 2:
+                return "black"
+            else:
+                return "ERROR"
+
+        count = 1
         # Up and Down
-        for i in range(5):
+        for i in range(1,6):
             up_coord = (current_coord[0], current_coord[1] + i)
             if is_within_board(up_coord) and current_color == bord2D[up_coord]:
                 count += 1
@@ -311,11 +319,11 @@ class GtpConnection:
                 count += 1
 
             if count >= 5:
-                return current_coord
+                return int_to_color(current_color)
 
-        count = 0
+        count = 1
         # L and R
-        for i in range(5):
+        for i in range(1,6):
             right_coord = (current_coord[0] + i, current_coord[1])
             left_coord = (current_coord[0] - i, current_coord[1])
             
@@ -326,13 +334,13 @@ class GtpConnection:
                 count += 1
 
             if count >= 5:
-                return current_coord
+                return int_to_color(current_color)
         
-        count = 0
+        count = 1
         # Diag 1
-        for i in range(5):
+        for i in range(1,6):
             right_coord = (current_coord[0] + i, current_coord[1] + i)
-            left_coord = (current_coord[0] - i, current_coord[1] - 1)
+            left_coord = (current_coord[0] - i, current_coord[1] - i)
 
             if is_within_board(right_coord) and current_color == bord2D[right_coord]:
                 count += 1
@@ -341,11 +349,11 @@ class GtpConnection:
                 count += 1
 
             if count >= 5:
-                return current_coord
+                return int_to_color(current_color)
             
-        count = 0
+        count = 1
         # Diag 2
-        for i in range(5):
+        for i in range(1,6):
             right_coord = (current_coord[0] + i, current_coord[1] - i)
             left_coord = (current_coord[0] - i, current_coord[1] + i)
             
@@ -356,7 +364,7 @@ class GtpConnection:
                 count += 1
 
             if count >= 5:
-                return current_coord
+                return int_to_color(current_color)
             
         return False
     
@@ -406,7 +414,7 @@ class GtpConnection:
                         0 <= neighbor_coord[0] < self.board.size
                         and 0 <= neighbor_coord[1] < self.board.size
                 ):
-                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0], neighbor_coord[1], self.board.size)]
+                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0] + 1, neighbor_coord[1] + 1, self.board.size)]
                     if neighbor_color == EMPTY:
                         return True
                     elif neighbor_color == group_color:
@@ -427,7 +435,7 @@ class GtpConnection:
                 continue
             visited.add(coord)
 
-            self.board.board[coord_to_point(coord[0], coord[1], self.board.size)] = EMPTY
+            self.board.board[coord_to_point(coord[0] + 1, coord[1] + 1, self.board.size)] = EMPTY
 
             for neighbor in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
                 neighbor_coord = (coord[0] + neighbor[0], coord[1] + neighbor[1])
@@ -436,7 +444,7 @@ class GtpConnection:
                         0 <= neighbor_coord[0] < self.board.size
                         and 0 <= neighbor_coord[1] < self.board.size
                 ):
-                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0], neighbor_coord[1], self.board.size)]
+                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0] + 1, neighbor_coord[1] + 1, self.board.size)]
                     if neighbor_color == group_color:
                         stack.append(neighbor_coord)
     
@@ -446,6 +454,7 @@ class GtpConnection:
             last_check = self.check_point_is_win(self.board.last_move)
             if last_check != False:
                 self.respond(last_check)
+                return
         if self.board.black_cap >= 10:
             self.respond("black")
             return
@@ -477,13 +486,24 @@ class GtpConnection:
         try:
             board_color = args[0].lower()
             board_move = args[1]
+
+            if (board_color != 'b' and board_color != 'w'):
+                self.respond('illegal move: "{}" wrong color'.format(board_color))
+                return
+            
             color = color_to_int(board_color)
             if args[1].lower() == "pass":
                 # self.board.play_move(PASS, color)
                 self.board.current_player = opponent(color)
                 self.respond()
                 return
-            coord = move_to_coord(args[1], self.board.size)
+            
+            try:
+                coord = move_to_coord(args[1], self.board.size)
+            except (IndexError, ValueError):
+                self.respond('illegal move: "{}" wrong coordinate'.format(board_move))
+                return
+            
             move = coord_to_point(coord[0], coord[1], self.board.size)
             if self.board.current_player != color:
                 self.respond(f'illegal move: {args} wrong color')
@@ -491,6 +511,7 @@ class GtpConnection:
             # is legal move
             if self.board.board[move] != EMPTY:
                 self.respond(f'illegal move: {args} occupied')
+                return
             else:
                 self.board.board[move] = color
                 self.cap_process(move)
@@ -500,8 +521,10 @@ class GtpConnection:
                     "Move: {}\nBoard:\n{}\n".format(board_move, self.board2d())
                 )
             self.respond()
+            return
         except Exception as e:
             self.respond("Error: {}".format(str(e)))
+            raise e
 
     def genmove_cmd(self, args):
         """ Modify this function for Assignment 1 """
@@ -537,6 +560,7 @@ class GtpConnection:
         self.board.board[move] = color
         self.board.current_player = opponent(color)
         self.board.last_move = move
+        self.cap_process(move)
         move_as_string = format_point(point_to_coord(move, self.board.size))
         self.respond(move_as_string)
 
