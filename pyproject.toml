@@ -6,7 +6,7 @@ authors = ["jiemin <jiemin@ualberta.ca>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.10"
 numpy = "^1.25.2"
 
 
