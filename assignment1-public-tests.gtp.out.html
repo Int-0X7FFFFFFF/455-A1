@@ -23,10 +23,10 @@ span.test { font-weight:bold; }
 </td></tr>
 </table>
 <table width="100%" bgcolor="#e0e0e0">
-<tr><th align="left">Date:</th><td>September 15, 2023 at 1:40:39 PM MDT</td></tr>
-<tr><th align="left">Host:</th><td>mac-16.local</td></tr>
+<tr><th align="left">Date:</th><td>September 15, 2023, 2:49:22 PM MDT</td></tr>
+<tr><th align="left">Host:</th><td>DesktopArch (12th Gen Intel(R) Core(TM) i5-12400)</td></tr>
 <tr><th align="left" valign="top">Command:</th>
-<td valign="top"><tt>python3 Go0.py</tt></td></tr>
+<td valign="top"><tt>Go0.py</tt></td></tr>
 </table>
 <pre style="margin:1em">
 name
@@ -188,7 +188,9 @@ Board:
 </span>= 
 
 <span class="command">play W C7
-</span><span class="stderr">Move: C7
+</span>= 
+
+<span class="stderr">Move: C7
 Board:
 [[0 1 2 0 0 0 0]
  [0 0 0 0 0 0 0]
@@ -197,9 +199,7 @@ Board:
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]]
-</span>= 
-
-<span class="command">play B C6
+</span><span class="command">play B C6
 </span><span class="stderr">Move: C6
 Board:
 [[0 1 2 0 0 0 0]
@@ -335,7 +335,7 @@ Board:
 </span><span class="stderr">Move: A6
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
@@ -347,7 +347,7 @@ Board:
 </span><span class="stderr">Move: C4
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 1 0 0 0 0]
  [0 0 0 0 0 0 0]
@@ -359,7 +359,7 @@ Board:
 </span><span class="stderr">Move: D4
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 0 0 0 0 0]
@@ -371,7 +371,7 @@ Board:
 </span><span class="stderr">Move: C3
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 0 0 0 0]
@@ -383,7 +383,7 @@ Board:
 </span><span class="stderr">Move: D3
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
@@ -395,7 +395,7 @@ Board:
 </span><span class="stderr">Move: C2
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
@@ -406,14 +406,14 @@ Board:
 
 <span class="test"><a name="30">30 gogui-rules_final_result
 </a></span><span class="stderr">C2</span><span class="test">#?[unknown]
-</span><span class="fail">= black
+= unknown
 
 </span>
 <span class="command">play W D2
 </span><span class="stderr">Move: D2
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 2 1 0 0]
+ [2 0 0 2 1 0 0]
  [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
@@ -444,7 +444,16 @@ Board:
 </span>= 
 
 <span class="command">play B A3
-</span>= illegal move: ['B', 'A3'] wrong color
+</span><span class="stderr">Move: A3
+Board:
+[[0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [1 0 0 0 0 0 0]
+ [1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play W A1
 </span><span class="stderr">Move: A1
@@ -453,13 +462,22 @@ Board:
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
+ [1 0 0 0 0 0 0]
  [1 0 0 0 0 0 0]
  [2 0 0 0 0 0 0]]
 </span>= 
 
 <span class="command">play W A4
-</span>= illegal move: ['W', 'A4'] wrong color
+</span><span class="stderr">Move: A4
+Board:
+[[0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 0 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play B B2
 </span><span class="stderr">Move: B2
@@ -467,93 +485,183 @@ Board:
 [[0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [1 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
  [2 0 0 0 0 0 0]]
 </span>= 
 
 <span class="command">play B B3
-</span>= illegal move: ['B', 'B3'] wrong color
+</span><span class="stderr">Move: B3
+Board:
+[[0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play B B5
-</span>= illegal move: ['B', 'B5'] wrong color
+</span><span class="stderr">Move: B5
+Board:
+[[0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play B B6
-</span>= illegal move: ['B', 'B6'] wrong color
+</span><span class="stderr">Move: B6
+Board:
+[[0 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play W B1
 </span><span class="stderr">Move: B1
 Board:
 [[0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [1 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
  [2 2 0 0 0 0 0]]
 </span>= 
 
 <span class="command">play W B7
-</span>= illegal move: ['W', 'B7'] wrong color
+</span><span class="stderr">Move: B7
+Board:
+[[0 2 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 0 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [0 1 0 0 0 0 0]
+ [2 2 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play W B4
-</span>= illegal move: ['W', 'B4'] wrong color
+</span><span class="stderr">Move: B4
+Board:
+[[0 2 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 2 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 2 0 0 0 0 0]]
+</span>= 
 
 
 <span class="test"><a name="50">50 gogui-rules_captured_count
 </a>#?[6 0]
-</span><span class="fail">= 0 0
+= 6 0
 
 </span>
 <span class="command">play B C2
 </span><span class="stderr">Move: C2
 Board:
-[[0 0 0 0 0 0 0]
+[[0 2 0 0 0 0 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
+ [2 2 0 0 0 0 0]
  [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [1 1 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
  [2 2 0 0 0 0 0]]
 </span>= 
 
 <span class="command">play B C3
-</span>= illegal move: ['B', 'C3'] wrong color
+</span><span class="stderr">Move: C3
+Board:
+[[0 2 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play B C5
-</span>= illegal move: ['B', 'C5'] wrong color
+</span><span class="stderr">Move: C5
+Board:
+[[0 2 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play B C6
-</span>= illegal move: ['B', 'C6'] wrong color
+</span><span class="stderr">Move: C6
+Board:
+[[0 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]]
+</span>= 
 
 <span class="command">play W C1
 </span><span class="stderr">Move: C1
 Board:
-[[0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0]
- [1 1 1 0 0 0 0]
+[[0 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
  [2 2 2 0 0 0 0]]
 </span>= 
 
 <span class="command">play W C7
-</span>= illegal move: ['W', 'C7'] wrong color
+</span><span class="stderr">Move: C7
+Board:
+[[0 2 2 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 0 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [0 0 1 0 0 0 0]
+ [2 2 2 0 0 0 0]]
+</span>= 
 
 <span class="command">play W C4
-</span>= illegal move: ['W', 'C4'] wrong color
+</span><span class="stderr">Move: C4
+Board:
+[[0 2 2 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 2 2 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0]
+ [2 2 2 0 0 0 0]]
+</span>= 
 
 
 <span class="test"><a name="60">60 gogui-rules_final_result
-</a></span><span class="stderr">C1</span><span class="test">#?[white]
-</span><span class="fail">= unknown
+</a></span><span class="stderr">C4</span><span class="test">#?[white]
+= white
 
 </span>
 <span class="test"><a name="70">70 gogui-rules_captured_count
 </a>#?[10 0]
-</span><span class="fail">= 0 0
+= 10 0
 
 </span>
 <span class="command">clear_board
@@ -1157,6 +1265,6 @@ quit
 
 </pre>
 <hr style="margin-bottom:0" size="1">
-<p style="margin-top:1; margin-right:5" align="right"><i><small>Generated on 9/15/23, 1:40 PM by gogui-regress 1.5.3 (<a href="http://gogui.sf.net">http://gogui.sf.net</a>)</small></i></p>
+<p style="margin-top:1; margin-right:5" align="right"><i><small>Generated on 9/15/23, 2:49 PM by gogui-regress 1.5.3 (<a href="http://gogui.sf.net">http://gogui.sf.net</a>)</small></i></p>
 </body>
 </html>

@@ -497,12 +497,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    u_nighbors[0][0] + 1, u_nighbors[0][1] + 1, self.board.size
+                    self.board.size - u_nighbors[0][0],
+                    u_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    u_nighbors[1][0] + 1, u_nighbors[1][1] + 1, self.board.size
+                    self.board.size - u_nighbors[1][0],
+                    u_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -521,12 +525,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    d_nighbors[0][0] + 1, d_nighbors[0][1] + 1, self.board.size
+                    self.board.size - d_nighbors[0][0],
+                    d_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    d_nighbors[1][0] + 1, d_nighbors[1][1] + 1, self.board.size
+                    self.board.size - d_nighbors[1][0],
+                    d_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -545,12 +553,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    r_nighbors[0][0] + 1, r_nighbors[0][1] + 1, self.board.size
+                    self.board.size - r_nighbors[0][0],
+                    r_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    r_nighbors[1][0] + 1, r_nighbors[1][1] + 1, self.board.size
+                    self.board.size - r_nighbors[1][0],
+                    r_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -569,12 +581,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    l_nighbors[0][0] + 1, l_nighbors[0][1] + 1, self.board.size
+                    self.board.size - l_nighbors[0][0],
+                    l_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    l_nighbors[1][0] + 1, l_nighbors[1][1] + 1, self.board.size
+                    self.board.size - l_nighbors[1][0],
+                    l_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -593,12 +609,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    ur_nighbors[0][0] + 1, ur_nighbors[0][1] + 1, self.board.size
+                    self.board.size - ur_nighbors[0][0],
+                    ur_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    ur_nighbors[1][0] + 1, ur_nighbors[1][1] + 1, self.board.size
+                    self.board.size - ur_nighbors[1][0],
+                    ur_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -617,12 +637,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    ul_nighbors[0][0] + 1, ul_nighbors[0][1] + 1, self.board.size
+                    self.board.size - ul_nighbors[0][0],
+                    ul_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    ul_nighbors[1][0] + 1, ul_nighbors[1][1] + 1, self.board.size
+                    self.board.size - ul_nighbors[1][0],
+                    ul_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -641,12 +665,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    dr_nighbors[0][0] + 1, dr_nighbors[0][1] + 1, self.board.size
+                    self.board.size - dr_nighbors[0][0],
+                    dr_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    dr_nighbors[1][0] + 1, dr_nighbors[1][1] + 1, self.board.size
+                    self.board.size - dr_nighbors[1][0],
+                    dr_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -665,12 +693,16 @@ class GtpConnection:
         ):
             self.board.board[
                 coord_to_point(
-                    dl_nighbors[0][0] + 1, dl_nighbors[0][1] + 1, self.board.size
+                    self.board.size - dl_nighbors[0][0],
+                    dl_nighbors[0][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
             self.board.board[
                 coord_to_point(
-                    dl_nighbors[1][0] + 1, dl_nighbors[1][1] + 1, self.board.size
+                    self.board.size - dl_nighbors[1][0],
+                    dl_nighbors[1][1] + 1,
+                    self.board.size,
                 )
             ] = EMPTY
 
@@ -833,9 +865,9 @@ class GtpConnection:
                 return
 
             move = coord_to_point(coord[0], coord[1], self.board.size)
-            if self.board.current_player != color:
-                self.respond(f"illegal move: {args} wrong color")
-                return
+            # if self.board.current_player != color:
+            #     self.respond(f"illegal move: {args} wrong color")
+            #     return
             # is legal move
             if self.board.board[move] != EMPTY:
                 self.respond(f"illegal move: {args} occupied")
