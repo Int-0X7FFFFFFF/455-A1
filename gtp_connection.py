@@ -19,18 +19,22 @@ from board_base import (
     WHITE,
     EMPTY,
     BORDER,
-    GO_COLOR, GO_POINT,
+    GO_COLOR,
+    GO_POINT,
     PASS,
     MAXSIZE,
     coord_to_point,
-    opponent
+    opponent,
 )
 from board import GoBoard
 from board_util import GoBoardUtil
 from engine import GoEngine
 
+
 class GtpConnection:
-    def __init__(self, go_engine: GoEngine, board: GoBoard, debug_mode: bool = True) -> None:
+    def __init__(
+        self, go_engine: GoEngine, board: GoBoard, debug_mode: bool = True
+    ) -> None:
         """
         Manage a GTP connection for a Go-playing engine
 
@@ -38,7 +42,7 @@ class GtpConnection:
         ----------
         go_engine:
             a program that can reply to a set of GTP commandsbelow
-        board: 
+        board:
             Represents the current board state.
         """
         self._debug_mode: bool = debug_mode
@@ -66,7 +70,7 @@ class GtpConnection:
             "gogui-rules_board_size": self.gogui_rules_board_size_cmd,
             "gogui-rules_side_to_move": self.gogui_rules_side_to_move_cmd,
             "gogui-rules_board": self.gogui_rules_board_cmd,
-            "gogui-analyze_commands": self.gogui_analyze_cmd
+            "gogui-analyze_commands": self.gogui_analyze_cmd,
         }
 
         # argmap is used for argument checking
@@ -89,7 +93,7 @@ class GtpConnection:
 
     def start_connection(self) -> None:
         """
-        Start a GTP connection. 
+        Start a GTP connection.
         This function continuously monitors standard input for commands.
         """
         line = stdin.readline()
@@ -139,18 +143,18 @@ class GtpConnection:
         return False
 
     def debug_msg(self, msg: str) -> None:
-        """ Write msg to the debug stream """
+        """Write msg to the debug stream"""
         if self._debug_mode:
             stderr.write(msg)
             stderr.flush()
 
     def error(self, error_msg: str) -> None:
-        """ Send error msg to stdout """
+        """Send error msg to stdout"""
         stdout.write("? {}\n\n".format(error_msg))
         stdout.flush()
 
     def respond(self, response: str = "") -> None:
-        """ Send response to stdout """
+        """Send response to stdout"""
         stdout.write("= {}\n\n".format(response))
         stdout.flush()
 
@@ -165,24 +169,24 @@ class GtpConnection:
         return str(GoBoardUtil.get_twoD_board(self.board))
 
     def protocol_version_cmd(self, args: List[str]) -> None:
-        """ Return the GTP protocol version being used (always 2) """
+        """Return the GTP protocol version being used (always 2)"""
         self.respond("2")
 
     def quit_cmd(self, args: List[str]) -> None:
-        """ Quit game and exit the GTP interface """
+        """Quit game and exit the GTP interface"""
         self.respond()
         exit()
 
     def name_cmd(self, args: List[str]) -> None:
-        """ Return the name of the Go engine """
+        """Return the name of the Go engine"""
         self.respond(self.go_engine.name)
 
     def version_cmd(self, args: List[str]) -> None:
-        """ Return the version of the  Go engine """
+        """Return the version of the  Go engine"""
         self.respond(str(self.go_engine.version))
 
     def clear_board_cmd(self, args: List[str]) -> None:
-        """ clear the board """
+        """clear the board"""
         self.reset(self.board.size)
         self.respond()
 
@@ -213,7 +217,7 @@ class GtpConnection:
             self.respond("false")
 
     def list_commands_cmd(self, args: List[str]) -> None:
-        """ list all supported GTP commands """
+        """list all supported GTP commands"""
         self.respond(" ".join(list(self.commands.keys())))
 
     def legal_moves_cmd(self, args: List[str]) -> None:
@@ -240,47 +244,49 @@ class GtpConnection:
     Assignment 1 - commands we already implemented for you
     ==========================================================================
     """
+
     def gogui_analyze_cmd(self, args: List[str]) -> None:
-        """ We already implemented this function for Assignment 1 """
-        self.respond("pstring/Legal Moves For ToPlay/gogui-rules_legal_moves\n"
-                     "pstring/Side to Play/gogui-rules_side_to_move\n"
-                     "pstring/Final Result/gogui-rules_final_result\n"
-                     "pstring/Board Size/gogui-rules_board_size\n"
-                     "pstring/Rules GameID/gogui-rules_game_id\n"
-                     "pstring/Show Board/gogui-rules_board\n"
-                     )
+        """We already implemented this function for Assignment 1"""
+        self.respond(
+            "pstring/Legal Moves For ToPlay/gogui-rules_legal_moves\n"
+            "pstring/Side to Play/gogui-rules_side_to_move\n"
+            "pstring/Final Result/gogui-rules_final_result\n"
+            "pstring/Board Size/gogui-rules_board_size\n"
+            "pstring/Rules GameID/gogui-rules_game_id\n"
+            "pstring/Show Board/gogui-rules_board\n"
+        )
 
     def gogui_rules_game_id_cmd(self, args: List[str]) -> None:
-        """ We already implemented this function for Assignment 1 """
+        """We already implemented this function for Assignment 1"""
         self.respond("Ninuki")
 
     def gogui_rules_board_size_cmd(self, args: List[str]) -> None:
-        """ We already implemented this function for Assignment 1 """
+        """We already implemented this function for Assignment 1"""
         self.respond(str(self.board.size))
 
     def gogui_rules_side_to_move_cmd(self, args: List[str]) -> None:
-        """ We already implemented this function for Assignment 1 """
+        """We already implemented this function for Assignment 1"""
         color = "black" if self.board.current_player == BLACK else "white"
         self.respond(color)
 
     def gogui_rules_board_cmd(self, args: List[str]) -> None:
-        """ We already implemented this function for Assignment 1 """
+        """We already implemented this function for Assignment 1"""
         size = self.board.size
-        str = ''
-        for row in range(size-1, -1, -1):
+        str = ""
+        for row in range(size - 1, -1, -1):
             start = self.board.row_start(row + 1)
             for i in range(size):
-                #str += '.'
+                # str += '.'
                 point = self.board.board[start + i]
                 if point == BLACK:
-                    str += 'X'
+                    str += "X"
                 elif point == WHITE:
-                    str += 'O'
+                    str += "O"
                 elif point == EMPTY:
-                    str += '.'
+                    str += "."
                 else:
                     assert False
-            str += '\n'
+            str += "\n"
         self.respond(str)
 
     """
@@ -288,7 +294,8 @@ class GtpConnection:
     Assignment 1 - game-specific commands you have to implement or modify
     ==========================================================================
     """
-    def check_point_is_win(self, point:GO_POINT) -> GO_COLOR or bool:
+
+    def check_point_is_win(self, point: GO_POINT) -> GO_COLOR or bool:
         """Function to check is a point have 5 connected point"""
         self.debug_msg(format_point(point_to_coord(point, self.board.size)))
         bord2D = GoBoardUtil.get_twoD_board(self.board)
@@ -297,16 +304,18 @@ class GtpConnection:
         def is_within_board(coord):
             return 0 <= coord[0] < num_rows and 0 <= coord[1] < num_cols
 
-
         current_coord = point_to_coord(point, self.board.size)
-        current_coord = (((self.board.size -1) - (current_coord[0] - 1)), current_coord[1] - 1)
+        current_coord = (
+            ((self.board.size - 1) - (current_coord[0] - 1)),
+            current_coord[1] - 1,
+        )
         current_color = bord2D[current_coord]
 
         def int_to_color(num):
             if num == 1:
-                return "white"
-            elif num == 2:
                 return "black"
+            elif num == 2:
+                return "white"
             else:
                 return "ERROR"
 
@@ -314,7 +323,7 @@ class GtpConnection:
         UP = True
         DOWN = True
         # Up and Down
-        for i in range(1,6):
+        for i in range(1, 6):
             up_coord = (current_coord[0], current_coord[1] + i)
             if is_within_board(up_coord) and current_color == bord2D[up_coord] and UP:
                 count += 1
@@ -322,7 +331,11 @@ class GtpConnection:
                 UP = False
 
             down_coord = (current_coord[0], current_coord[1] - i)
-            if is_within_board(down_coord) and current_color == bord2D[down_coord] and DOWN:
+            if (
+                is_within_board(down_coord)
+                and current_color == bord2D[down_coord]
+                and DOWN
+            ):
                 count += 1
             else:
                 DOWN = False
@@ -334,91 +347,354 @@ class GtpConnection:
         # L and R
         L = True
         R = True
-        for i in range(1,6):
+        for i in range(1, 6):
             right_coord = (current_coord[0] + i, current_coord[1])
             left_coord = (current_coord[0] - i, current_coord[1])
-            
-            if is_within_board(right_coord) and current_color == bord2D[right_coord] and R:
+
+            if (
+                is_within_board(right_coord)
+                and current_color == bord2D[right_coord]
+                and R
+            ):
                 count += 1
             else:
                 R = False
-            
-            if is_within_board(left_coord) and current_color == bord2D[left_coord] and L:
+
+            if (
+                is_within_board(left_coord)
+                and current_color == bord2D[left_coord]
+                and L
+            ):
                 count += 1
             else:
                 R = False
 
             if count >= 5:
                 return int_to_color(current_color)
-        
+
         count = 1
         # Diag 1
         L = True
         R = True
-        for i in range(1,6):
+        for i in range(1, 6):
             right_coord = (current_coord[0] + i, current_coord[1] + i)
             left_coord = (current_coord[0] - i, current_coord[1] - i)
 
-            if is_within_board(right_coord) and current_color == bord2D[right_coord] and R:
+            if (
+                is_within_board(right_coord)
+                and current_color == bord2D[right_coord]
+                and R
+            ):
                 count += 1
             else:
                 R = False
-            
-            if is_within_board(left_coord) and current_color == bord2D[left_coord] and L:
+
+            if (
+                is_within_board(left_coord)
+                and current_color == bord2D[left_coord]
+                and L
+            ):
                 count += 1
             else:
                 R = False
             if count >= 5:
                 return int_to_color(current_color)
-            
+
         count = 1
         L = True
         R = True
         # Diag 2
-        for i in range(1,6):
+        for i in range(1, 6):
             right_coord = (current_coord[0] + i, current_coord[1] - i)
             left_coord = (current_coord[0] - i, current_coord[1] + i)
-            
-            if is_within_board(right_coord) and current_color == bord2D[right_coord] and R:
+
+            if (
+                is_within_board(right_coord)
+                and current_color == bord2D[right_coord]
+                and R
+            ):
                 count += 1
             else:
                 R = False
-            
-            if is_within_board(left_coord) and current_color == bord2D[left_coord] and L:
+
+            if (
+                is_within_board(left_coord)
+                and current_color == bord2D[left_coord]
+                and L
+            ):
                 count += 1
             else:
                 R = False
 
             if count >= 5:
                 return int_to_color(current_color)
-            
+
         return False
-    
+
     def cap_process(self, point: GO_POINT) -> None:
-            """
-            Function to process a point move and check if any stones are captured.
-            """
-            bord2D = GoBoardUtil.get_twoD_board(self.board)
-            current_coord = point_to_coord(point, self.board.size)
-            current_coord = (((self.board.size -1) - (current_coord[0] - 1)), current_coord[1] - 1)
-            current_color = bord2D[current_coord]
+        """
+        Function to process a point move and check if any stones are captured.
+        """
 
-            # Define the four adjacent neighbors
-            neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        bord2D = GoBoardUtil.get_twoD_board(self.board)
+        current_coord = point_to_coord(point, self.board.size)
+        current_coord = (
+            ((self.board.size - 1) - (current_coord[0] - 1)),
+            current_coord[1] - 1,
+        )
+        current_color = bord2D[current_coord]
 
-            for neighbor in neighbors:
-                neighbor_coord = (current_coord[0] + neighbor[0], current_coord[1] + neighbor[1])
+        num_rows, num_cols = bord2D.shape
 
-                # Check if the neighbor is within the board boundaries
-                if 0 <= neighbor_coord[0] < self.board.size and 0 <= neighbor_coord[1] < self.board.size:
-                    neighbor_color = bord2D[neighbor_coord]
+        def is_within_board(coord):
+            return 0 <= coord[0] < num_rows and 0 <= coord[1] < num_cols
 
-                    # Check if the neighbor has a different color
-                    if neighbor_color != current_color:
-                        # Perform a depth-first search to check for captured stones
-                        if not self.is_group_alive(neighbor_coord, neighbor_color):
-                            # If the group is not alive, remove the stones from the board
-                            self.remove_group(neighbor_coord, neighbor_color)
+        u_nighbors = []  # up
+        d_nighbors = []  # down
+        l_nighbors = []  # L
+        r_nighbors = []
+        ul_nighbors = []
+        ur_nighbors = []
+        dl_nighbors = []
+        dr_nighbors = []
+
+        # up and down
+
+        for i in range(1, 4):
+            up_coord = (current_coord[0], current_coord[1] + i)
+            down_coord = (current_coord[0], current_coord[1] - i)
+            right_coord = (current_coord[0] + i, current_coord[1])
+            left_coord = (current_coord[0] - i, current_coord[1])
+            up_right_coord = (current_coord[0] + i, current_coord[1] + i)
+            down_left_coord = (current_coord[0] - i, current_coord[1] - i)
+            down_right_coord = (current_coord[0] + i, current_coord[1] - i)
+            up_left_coord = (current_coord[0] - i, current_coord[1] + i)
+
+            if is_within_board(up_coord):
+                u_nighbors.append(up_coord)
+            if is_within_board(down_coord):
+                d_nighbors.append(down_coord)
+            if is_within_board(right_coord):
+                r_nighbors.append(right_coord)
+            if is_within_board(left_coord):
+                l_nighbors.append(left_coord)
+            if is_within_board(up_right_coord):
+                ur_nighbors.append(up_right_coord)
+            if is_within_board(down_left_coord):
+                dl_nighbors.append(down_left_coord)
+            if is_within_board(down_right_coord):
+                dr_nighbors.append(down_right_coord)
+            if is_within_board(up_left_coord):
+                ul_nighbors.append(up_left_coord)
+
+        # UP
+        if (
+            len(u_nighbors) == 3
+            and bord2D[u_nighbors[0]]
+            == bord2D[u_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[u_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    u_nighbors[0][0] + 1, u_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    u_nighbors[1][0] + 1, u_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # DOWN
+        if (
+            len(d_nighbors) == 3
+            and bord2D[d_nighbors[0]]
+            == bord2D[d_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[d_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    d_nighbors[0][0] + 1, d_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    d_nighbors[1][0] + 1, d_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # R
+        if (
+            len(r_nighbors) == 3
+            and bord2D[r_nighbors[0]]
+            == bord2D[r_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[r_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    r_nighbors[0][0] + 1, r_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    r_nighbors[1][0] + 1, r_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # L
+        if (
+            len(l_nighbors) == 3
+            and bord2D[l_nighbors[0]]
+            == bord2D[l_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[l_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    l_nighbors[0][0] + 1, l_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    l_nighbors[1][0] + 1, l_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # UR
+        if (
+            len(ur_nighbors) == 3
+            and bord2D[ur_nighbors[0]]
+            == bord2D[ur_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[ur_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    ur_nighbors[0][0] + 1, ur_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    ur_nighbors[1][0] + 1, ur_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # UL
+        if (
+            len(ul_nighbors) == 3
+            and bord2D[ul_nighbors[0]]
+            == bord2D[ul_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[ul_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    ul_nighbors[0][0] + 1, ul_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    ul_nighbors[1][0] + 1, ul_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # DR
+        if (
+            len(dr_nighbors) == 3
+            and bord2D[dr_nighbors[0]]
+            == bord2D[dr_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[dr_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    dr_nighbors[0][0] + 1, dr_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    dr_nighbors[1][0] + 1, dr_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # DL
+        if (
+            len(dl_nighbors) == 3
+            and bord2D[dl_nighbors[0]]
+            == bord2D[dl_nighbors[1]]
+            == opponent(current_color)
+            and bord2D[dl_nighbors[2]] == current_color
+        ):
+            self.board.board[
+                coord_to_point(
+                    dl_nighbors[0][0] + 1, dl_nighbors[0][1] + 1, self.board.size
+                )
+            ] = EMPTY
+            self.board.board[
+                coord_to_point(
+                    dl_nighbors[1][0] + 1, dl_nighbors[1][1] + 1, self.board.size
+                )
+            ] = EMPTY
+
+            if current_color == 1:
+                self.board.black_cap += 2
+            elif current_color == 2:
+                self.board.white_cap += 2
+
+        # Define the four adjacent neighbors
+        # neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+        # for neighbor in neighbors:
+        #     neighbor_coord = (current_coord[0] + neighbor[0], current_coord[1] + neighbor[1])
+
+        #     # Check if the neighbor is within the board boundaries
+        #     if 0 <= neighbor_coord[0] < self.board.size and 0 <= neighbor_coord[1] < self.board.size:
+        #         neighbor_color = bord2D[neighbor_coord]
+
+        #         # Check if the neighbor has a different color
+        #         if neighbor_color != current_color:
+        #             # Perform a depth-first search to check for captured stones
+        #             if not self.is_group_alive(neighbor_coord, neighbor_color):
+        #                 # If the group is not alive, remove the stones from the board
+        #                 self.remove_group(neighbor_coord, neighbor_color)
 
     def is_group_alive(self, group_coord, group_color):
         """
@@ -437,10 +713,16 @@ class GtpConnection:
                 neighbor_coord = (coord[0] + neighbor[0], coord[1] + neighbor[1])
 
                 if (
-                        0 <= neighbor_coord[0] < self.board.size
-                        and 0 <= neighbor_coord[1] < self.board.size
+                    0 <= neighbor_coord[0] < self.board.size
+                    and 0 <= neighbor_coord[1] < self.board.size
                 ):
-                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0] + 1, neighbor_coord[1] + 1, self.board.size)]
+                    neighbor_color = self.board.board[
+                        coord_to_point(
+                            neighbor_coord[0] + 1,
+                            neighbor_coord[1] + 1,
+                            self.board.size,
+                        )
+                    ]
                     if neighbor_color == EMPTY:
                         return True
                     elif neighbor_color == group_color:
@@ -461,21 +743,29 @@ class GtpConnection:
                 continue
             visited.add(coord)
 
-            self.board.board[coord_to_point(coord[0] + 1, coord[1] + 1, self.board.size)] = EMPTY
+            self.board.board[
+                coord_to_point(coord[0] + 1, coord[1] + 1, self.board.size)
+            ] = EMPTY
 
             for neighbor in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
                 neighbor_coord = (coord[0] + neighbor[0], coord[1] + neighbor[1])
 
                 if (
-                        0 <= neighbor_coord[0] < self.board.size
-                        and 0 <= neighbor_coord[1] < self.board.size
+                    0 <= neighbor_coord[0] < self.board.size
+                    and 0 <= neighbor_coord[1] < self.board.size
                 ):
-                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0] + 1, neighbor_coord[1] + 1, self.board.size)]
+                    neighbor_color = self.board.board[
+                        coord_to_point(
+                            neighbor_coord[0] + 1,
+                            neighbor_coord[1] + 1,
+                            self.board.size,
+                        )
+                    ]
                     if neighbor_color == group_color:
                         stack.append(neighbor_coord)
-    
+
     def gogui_rules_final_result_cmd(self, args: List[str]) -> None:
-        """ Implement this function for Assignment 1 """
+        """Implement this function for Assignment 1"""
         if self.board.last_move != -1:
             last_check = self.check_point_is_win(self.board.last_move)
             if last_check != False:
@@ -499,11 +789,16 @@ class GtpConnection:
         return
 
     def gogui_rules_legal_moves_cmd(self, args: List[str]) -> None:
-        """ Implement this function for Assignment 1 """
+        """Implement this function for Assignment 1"""
         if self.game_status == "playing":
-            list_res = [format_point(point_to_coord(x, self.board.size)) for x in self.board.get_empty_points()]
+            list_res = [
+                format_point(point_to_coord(x, self.board.size))
+                for x in self.board.get_empty_points()
+            ]
             if self.board.ko_recapture != -1:
-                ko = format_point(point_to_coord(self.board.ko_recapture, self.board.size))
+                ko = format_point(
+                    point_to_coord(self.board.ko_recapture, self.board.size)
+                )
                 if ko in list_res:
                     list_res.remove(ko)
             res = " ".join(list_res)
@@ -520,30 +815,30 @@ class GtpConnection:
             board_color = args[0].lower()
             board_move = args[1]
 
-            if (board_color != 'b' and board_color != 'w'):
+            if board_color != "b" and board_color != "w":
                 self.respond('illegal move: "{}" wrong color'.format(board_color))
                 return
-            
+
             color = color_to_int(board_color)
             if args[1].lower() == "pass":
                 # self.board.play_move(PASS, color)
                 self.board.current_player = opponent(color)
                 self.respond()
                 return
-            
+
             try:
                 coord = move_to_coord(args[1], self.board.size)
             except (IndexError, ValueError):
                 self.respond('illegal move: "{}" wrong coordinate'.format(board_move))
                 return
-            
+
             move = coord_to_point(coord[0], coord[1], self.board.size)
             if self.board.current_player != color:
-                self.respond(f'illegal move: {args} wrong color')
+                self.respond(f"illegal move: {args} wrong color")
                 return
             # is legal move
             if self.board.board[move] != EMPTY:
-                self.respond(f'illegal move: {args} occupied')
+                self.respond(f"illegal move: {args} occupied")
                 return
             else:
                 self.board.board[move] = color
@@ -560,7 +855,7 @@ class GtpConnection:
             raise e
 
     def genmove_cmd(self, args):
-        """ Modify this function for Assignment 1 """
+        """Modify this function for Assignment 1"""
         """ generate a move for color args[0] in {'b','w'} """
         board_color = args[0].lower()
         color = color_to_int(board_color)
@@ -570,7 +865,10 @@ class GtpConnection:
         # if self.board.result() == opponent:
         #     self.respond("resign")
         #     return
-        if self.board.last_move != -1 and self.check_point_is_win(self.board.last_move) != False:
+        if (
+            self.board.last_move != -1
+            and self.check_point_is_win(self.board.last_move) != False
+        ):
             self.respond("resign")
             return
 
@@ -587,8 +885,7 @@ class GtpConnection:
         if len(list_res) == 0:
             self.respond("pass")
             return
-        
-        
+
         move = np.random.choice(list_res)
         self.board.board[move] = color
         self.board.current_player = opponent(color)
@@ -597,14 +894,13 @@ class GtpConnection:
         move_as_string = format_point(point_to_coord(move, self.board.size))
         self.respond(move_as_string)
 
-
     def gogui_rules_captured_count_cmd(self, args: List[str]) -> None:
-        """ 
+        """
         Modify this function for Assignment 1.
         Respond with the score for white, an space, and the score for black.
         """
 
-        self.respond(f'{self.board.white_cap} {self.board.black_cap}')
+        self.respond(f"{self.board.white_cap} {self.board.black_cap}")
 
     """
     ==========================================================================
@@ -612,9 +908,10 @@ class GtpConnection:
     ==========================================================================
     """
 
+
 def point_to_coord(point: GO_POINT, boardsize: int) -> Tuple[int, int]:
     """
-    Transform point given as board array index 
+    Transform point given as board array index
     to (row, col) coordinate representation.
     Special case: PASS is transformed to (PASS,PASS)
     """

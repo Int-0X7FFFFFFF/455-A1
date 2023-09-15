@@ -23,10 +23,10 @@ span.test { font-weight:bold; }
 </td></tr>
 </table>
 <table width="100%" bgcolor="#e0e0e0">
-<tr><th align="left">Date:</th><td>September 15, 2023, 12:16:29 AM MDT</td></tr>
-<tr><th align="left">Host:</th><td>DesktopArch (12th Gen Intel(R) Core(TM) i5-12400)</td></tr>
+<tr><th align="left">Date:</th><td>September 15, 2023 at 1:40:39 PM MDT</td></tr>
+<tr><th align="left">Host:</th><td>mac-16.local</td></tr>
 <tr><th align="left" valign="top">Command:</th>
-<td valign="top"><tt>Go0.py</tt></td></tr>
+<td valign="top"><tt>python3 Go0.py</tt></td></tr>
 </table>
 <pre style="margin:1em">
 name
@@ -159,7 +159,7 @@ Board:
 
 <span class="test"><a name="0">00 gogui-rules_final_result
 </a></span><span class="stderr">G2</span><span class="test">#?[black]
-</span><span class="fail">= white
+= black
 
 </span>
 <span class="test"><a name="10">10 gogui-rules_legal_moves
@@ -348,7 +348,7 @@ Board:
 Board:
 [[0 1 2 1 2 0 0]
  [2 1 1 2 1 0 0]
- [0 2 0 2 1 2 0]
+ [0 2 1 2 1 2 0]
  [0 0 1 0 0 0 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
@@ -360,7 +360,7 @@ Board:
 Board:
 [[0 1 2 1 2 0 0]
  [2 1 1 2 1 0 0]
- [0 2 0 2 1 2 0]
+ [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 0 0 0 0 0]
  [0 0 0 0 0 0 0]
@@ -372,7 +372,7 @@ Board:
 Board:
 [[0 1 2 1 2 0 0]
  [2 1 1 2 1 0 0]
- [0 2 0 2 1 2 0]
+ [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 0 0 0 0]
  [0 0 0 0 0 0 0]
@@ -383,8 +383,8 @@ Board:
 </span><span class="stderr">Move: D3
 Board:
 [[0 1 2 1 2 0 0]
- [2 1 1 0 1 0 0]
- [0 2 0 2 1 2 0]
+ [2 1 1 2 1 0 0]
+ [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
  [0 0 0 0 0 0 0]
@@ -394,9 +394,9 @@ Board:
 <span class="command">play B C2
 </span><span class="stderr">Move: C2
 Board:
-[[0 1 0 1 2 0 0]
- [2 0 1 0 1 0 0]
- [0 2 0 2 1 2 0]
+[[0 1 2 1 2 0 0]
+ [2 1 1 2 1 0 0]
+ [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
  [0 0 1 0 0 0 0]
@@ -406,15 +406,15 @@ Board:
 
 <span class="test"><a name="30">30 gogui-rules_final_result
 </a></span><span class="stderr">C2</span><span class="test">#?[unknown]
-= unknown
+</span><span class="fail">= black
 
 </span>
 <span class="command">play W D2
 </span><span class="stderr">Move: D2
 Board:
-[[0 1 0 1 2 0 0]
- [2 0 1 0 1 0 0]
- [0 2 0 2 1 2 0]
+[[0 1 2 1 2 0 0]
+ [2 1 1 2 1 0 0]
+ [0 2 1 2 1 2 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
  [0 0 1 2 0 0 0]
@@ -424,7 +424,7 @@ Board:
 
 <span class="test"><a name="40">40 gogui-rules_final_result
 </a></span><span class="stderr">D2</span><span class="test">#?[white]
-</span><span class="fail">= unknown
+= white
 
 </span>
 <span class="command">clear_board
@@ -962,7 +962,7 @@ Board:
  [2 2 2 2 0 2 0]
  [1 1 1 1 0 1 0]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]]
 </span>= 
@@ -974,7 +974,7 @@ Board:
  [2 2 2 2 0 2 0]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]]
 </span>= 
@@ -986,9 +986,9 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play B A7
@@ -998,9 +998,9 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play W B7
@@ -1010,9 +1010,9 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play B C7
@@ -1022,33 +1022,33 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play W D7
-</span>= 
-
-<span class="stderr">Move: D7
+</span><span class="stderr">Move: D7
 Board:
 [[1 2 1 2 0 0 0]
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
-</span><span class="command">play B F7
+ [1 1 1 1 0 1 1]]
+</span>= 
+
+<span class="command">play B F7
 </span><span class="stderr">Move: F7
 Board:
 [[1 2 1 2 0 1 0]
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play W G7
@@ -1058,9 +1058,9 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play B E7
@@ -1070,9 +1070,9 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play W E5
@@ -1082,9 +1082,9 @@ Board:
  [2 2 2 2 0 2 2]
  [1 1 1 1 2 1 1]
  [2 2 2 2 0 2 2]
- [1 1 1 1 0 1 0]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play B E4
@@ -1093,10 +1093,10 @@ Board:
 [[1 2 1 2 1 1 2]
  [2 2 2 2 0 2 2]
  [1 1 1 1 2 1 1]
- [0 0 0 0 1 2 2]
- [1 1 1 1 0 1 0]
+ [2 2 2 2 1 2 2]
+ [1 1 1 1 0 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play W E3
@@ -1104,11 +1104,11 @@ Board:
 Board:
 [[1 2 1 2 1 1 2]
  [2 2 2 2 0 2 2]
- [1 1 1 1 2 0 0]
- [0 0 0 0 1 2 2]
- [1 1 1 1 2 1 0]
+ [1 1 1 1 2 1 1]
+ [2 2 2 2 1 2 2]
+ [1 1 1 1 2 1 1]
  [2 2 2 2 0 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play B E2
@@ -1116,11 +1116,11 @@ Board:
 Board:
 [[1 2 1 2 1 1 2]
  [2 2 2 2 0 2 2]
- [1 1 1 1 2 0 0]
- [0 0 0 0 1 2 2]
- [1 1 1 1 2 1 0]
+ [1 1 1 1 2 1 1]
  [2 2 2 2 1 2 2]
- [1 0 1 1 0 1 0]]
+ [1 1 1 1 2 1 1]
+ [2 2 2 2 1 2 2]
+ [1 1 1 1 0 1 1]]
 </span>= 
 
 <span class="command">play W E1
@@ -1128,22 +1128,22 @@ Board:
 Board:
 [[1 2 1 2 1 1 2]
  [2 2 2 2 0 2 2]
- [1 1 1 1 2 0 0]
- [0 0 0 0 1 2 2]
- [1 1 1 1 2 1 0]
+ [1 1 1 1 2 1 1]
  [2 2 2 2 1 2 2]
- [1 0 1 1 2 1 0]]
+ [1 1 1 1 2 1 1]
+ [2 2 2 2 1 2 2]
+ [1 1 1 1 2 1 1]]
 </span>= 
 
 
 <span class="test"><a name="80">80 gogui-rules_legal_moves
 </a>#?[e6|E6]
-</span><span class="fail">= B1 G1 G3 A4 B4 C4 D4 F5 G5 E6
+= E6
 
 </span>
 <span class="test"><a name="90">90 genmove b
 </a></span><span class="stderr">E1</span><span class="test">#?[e6|E6]
-</span><span class="fail">= G1
+= E6
 
 </span></pre>
 <hr style="margin:1em" size="1">
@@ -1157,6 +1157,6 @@ quit
 
 </pre>
 <hr style="margin-bottom:0" size="1">
-<p style="margin-top:1; margin-right:5" align="right"><i><small>Generated on 9/15/23, 12:16 AM by gogui-regress 1.5.3 (<a href="http://gogui.sf.net">http://gogui.sf.net</a>)</small></i></p>
+<p style="margin-top:1; margin-right:5" align="right"><i><small>Generated on 9/15/23, 1:40 PM by gogui-regress 1.5.3 (<a href="http://gogui.sf.net">http://gogui.sf.net</a>)</small></i></p>
 </body>
 </html>
