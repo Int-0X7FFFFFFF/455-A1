@@ -296,6 +296,7 @@ class GtpConnection:
 
 
         current_coord = point_to_coord(point, self.board.size)
+        current_coord = (((self.board.size -1) - (current_coord[0] - 1)), current_coord[1] - 1)
         current_color = bord2D[current_coord]
 
         count = 0
@@ -360,17 +361,91 @@ class GtpConnection:
         return False
     
     def cap_process(self, point: GO_POINT) -> None:
-        # TODO
+            """
+            Function to process a point move and check if any stones are captured.
+            """
+            bord2D = GoBoardUtil.get_twoD_board(self.board)
+            current_coord = point_to_coord(point, self.board.size)
+            current_coord = (((self.board.size -1) - (current_coord[0] - 1)), current_coord[1] - 1)
+            current_color = bord2D[current_coord]
+
+            # Define the four adjacent neighbors
+            neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+            for neighbor in neighbors:
+                neighbor_coord = (current_coord[0] + neighbor[0], current_coord[1] + neighbor[1])
+
+                # Check if the neighbor is within the board boundaries
+                if 0 <= neighbor_coord[0] < self.board.size and 0 <= neighbor_coord[1] < self.board.size:
+                    neighbor_color = bord2D[neighbor_coord]
+
+                    # Check if the neighbor has a different color
+                    if neighbor_color != current_color:
+                        # Perform a depth-first search to check for captured stones
+                        if not self.is_group_alive(neighbor_coord, neighbor_color):
+                            # If the group is not alive, remove the stones from the board
+                            self.remove_group(neighbor_coord, neighbor_color)
+
+    def is_group_alive(self, group_coord, group_color):
         """
-        Function to process a point move and check is any cap in this move
+        Check if a group of stones of a specific color is alive using a depth-first search.
         """
-        return
+        visited = set()
+        stack = [group_coord]
+
+        while stack:
+            coord = stack.pop()
+            if coord in visited:
+                continue
+            visited.add(coord)
+
+            for neighbor in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                neighbor_coord = (coord[0] + neighbor[0], coord[1] + neighbor[1])
+
+                if (
+                        0 <= neighbor_coord[0] < self.board.size
+                        and 0 <= neighbor_coord[1] < self.board.size
+                ):
+                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0], neighbor_coord[1], self.board.size)]
+                    if neighbor_color == EMPTY:
+                        return True
+                    elif neighbor_color == group_color:
+                        stack.append(neighbor_coord)
+
+        return False
+
+    def remove_group(self, group_coord, group_color):
+        """
+        Remove a group of stones of a specific color from the board.
+        """
+        visited = set()
+        stack = [group_coord]
+
+        while stack:
+            coord = stack.pop()
+            if coord in visited:
+                continue
+            visited.add(coord)
+
+            self.board.board[coord_to_point(coord[0], coord[1], self.board.size)] = EMPTY
+
+            for neighbor in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                neighbor_coord = (coord[0] + neighbor[0], coord[1] + neighbor[1])
+
+                if (
+                        0 <= neighbor_coord[0] < self.board.size
+                        and 0 <= neighbor_coord[1] < self.board.size
+                ):
+                    neighbor_color = self.board.board[coord_to_point(neighbor_coord[0], neighbor_coord[1], self.board.size)]
+                    if neighbor_color == group_color:
+                        stack.append(neighbor_coord)
     
     def gogui_rules_final_result_cmd(self, args: List[str]) -> None:
         """ Implement this function for Assignment 1 """
-        last_check = self.check_point_is_win(self.board.last_move)
-        if last_check != False:
-            self.respond(last_check)
+        if self.board.last_move != -1:
+            last_check = self.check_point_is_win(self.board.last_move)
+            if last_check != False:
+                self.respond(last_check)
         if self.board.black_cap >= 10:
             self.respond("black")
             return
@@ -386,10 +461,11 @@ class GtpConnection:
 
     def gogui_rules_legal_moves_cmd(self, args: List[str]) -> None:
         """ Implement this function for Assignment 1 """
-        list_res = [format_point(x) for x in self.board.get_empty_points()]
-        ko = format_point(self.board.ko_recapture)
-        if ko in list_res:
-            list_res.remove(ko)
+        list_res = [format_point(point_to_coord(x, self.board.size)) for x in self.board.get_empty_points()]
+        if self.board.ko_recapture != -1:
+            ko = format_point(point_to_coord(self.board.ko_recapture, self.board.size))
+            if ko in list_res:
+                list_res.remove(ko)
         res = " ".join(list_res)
         self.respond(res)
 
@@ -418,6 +494,8 @@ class GtpConnection:
             else:
                 self.board.board[move] = color
                 self.cap_process(move)
+                self.board.last_move = move
+                self.board.current_player = opponent(color=color)
                 self.debug_msg(
                     "Move: {}\nBoard:\n{}\n".format(board_move, self.board2d())
                 )
@@ -425,21 +503,43 @@ class GtpConnection:
         except Exception as e:
             self.respond("Error: {}".format(str(e)))
 
-    def genmove_cmd(self, args: List[str]) -> None:
-        """ 
-        Modify this function for Assignment 1.
-        Generate a move for color args[0] in {'b','w'}.
-        """
+    def genmove_cmd(self, args):
+        """ Modify this function for Assignment 1 """
+        """ generate a move for color args[0] in {'b','w'} """
         board_color = args[0].lower()
         color = color_to_int(board_color)
-        move = self.go_engine.get_move(self.board, color)
-        move_coord = point_to_coord(move, self.board.size)
-        move_as_string = format_point(move_coord)
-        if self.board.is_legal(move, color):
-            self.board.play_move(move, color)
-            self.respond(move_as_string)
-        else:
-            self.respond("Illegal move: {}".format(move_as_string))
+
+        # Check if the game is already decided (opponent has won)
+        # opponent = "black" if color == WHITE else "white"
+        # if self.board.result() == opponent:
+        #     self.respond("resign")
+        #     return
+        if self.board.last_move != -1 and self.check_point_is_win(self.board.last_move) != False:
+            self.respond("resign")
+            return
+
+        # # Generate a move using your game engine
+        # move = self.go_engine.get_move(self.board, color)
+
+        list_res = [x for x in self.board.get_empty_points()]
+        if self.board.ko_recapture != -1:
+            ko = self.board.ko_recapture
+            if ko in list_res:
+                list_res.remove(ko)
+
+        # If your game engine returns None, it means full, no empty
+        if len(list_res) == 0:
+            self.respond("pass")
+            return
+        
+        
+        move = np.random.choice(list_res)
+        self.board.board[move] = color
+        self.board.current_player = opponent(color)
+        self.board.last_move = move
+        move_as_string = format_point(point_to_coord(move, self.board.size))
+        self.respond(move_as_string)
+
 
     def gogui_rules_captured_count_cmd(self, args: List[str]) -> None:
         """ 
